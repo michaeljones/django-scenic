@@ -1,6 +1,5 @@
 
 from django.contrib.auth.views import redirect_to_login
-from django import http
 
 from .views import BaseView
 
@@ -21,21 +20,22 @@ class LoginRequired(BaseView):
 
 class Guard(BaseView):
 
-    def __init__(self, condition, child):
+    def __init__(self, condition, response, view):
         self.condition = condition
-        self.child = child
+        self.response = response
+        self.view = view
 
     def dispatch(self, state, context):
 
         if self.condition(state, context):
-            raise http.Http404
+            return self.response(state, context)
 
-        return self.child.dispatch(state, context)
+        return self.view.dispatch(state, context)
 
     def process(self, state, context):
 
         if self.condition(state, context):
-            raise http.Http404
+            return self.response(state, context)
 
-        return self.child.process(state, context)
+        return self.view.process(state, context)
 

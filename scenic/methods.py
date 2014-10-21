@@ -25,6 +25,12 @@ class GetFormHandler(object):
         return self.template.render_to_response(state, context, {'form': form})
 
 
+class FormNotFound(Exception):
+    """Exception for when incoming POST data doesn't seem to have come from any of the forms
+    supported by this view.
+    """
+
+
 class PostMultiHandler(object):
 
     def __init__(self, form_handlers):

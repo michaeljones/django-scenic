@@ -1,5 +1,5 @@
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse as DjangoHttpResponse
 from django.contrib import messages
 
 
@@ -12,6 +12,14 @@ class SaveForm(object):
         setattr(state, self.name, state.form.save())
 
 
+class HttpResponse(object):
+
+    def __init__(self, status):
+        self.status = status
+
+    def __call__(self, state, context):
+        return DjangoHttpResponse(status=self.status)
+
 class RedirectResponse(object):
 
     def __init__(self, url, child):
@@ -21,6 +29,12 @@ class RedirectResponse(object):
     def __call__(self, state, context):
         self.child(state, context)
         return HttpResponseRedirect(self.url(state, context))
+
+
+class NullAction(object):
+
+    def __call__(self, state, context):
+        pass
 
 
 class SuccessMessage(object):
