@@ -32,4 +32,10 @@ class Guard(BaseView):
 
         return self.child.dispatch(state, context)
 
+    def process(self, state, context):
+
+        if self.condition(state, context):
+            raise http.Http404
+
+        return self.child.process(state, context)
 

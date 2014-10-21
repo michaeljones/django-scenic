@@ -25,6 +25,31 @@ class GetFormHandler(object):
         return self.template.render_to_response(state, context, {'form': form})
 
 
+class PostMultiHandler(object):
+
+    def __init__(self, form_handlers):
+        self.form_handlers = form_handlers
+
+    def _from_form(self, name, state, context):
+
+        if name in context.request.POST:
+            return True
+
+        names = self.form_handlers[name].get_names()
+        for entry in names:
+            if entry in context.request.POST:
+                return True
+
+        return False
+
+    def process(self, state, context):
+        for name in self.form_handlers.iterkeys():
+            if self._from_form(name, state, context):
+                return self.form_handlers[name].process(state, context)
+
+        raise FormNotFound('POST: %s' % context.request.POST)
+
+
 class TemplateHandler(object):
 
     def __init__(self, template):
@@ -34,3 +59,14 @@ class TemplateHandler(object):
         return self.template.render_to_response(state, context, {})
 
 
+class NamedHandler(object):
+
+    def __init__(self, handler, names):
+        self.handler = handler
+        self.names = names
+
+    def get_names(self):
+        return self.names
+
+    def process(self, state, context):
+        return self.handler.process(state, context)

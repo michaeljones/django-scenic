@@ -5,8 +5,11 @@ from django.contrib import messages
 
 class SaveForm(object):
 
+    def __init__(self, name):
+        self.name = name
+
     def __call__(self, state, context):
-        state.object = state.form.save()
+        setattr(state, self.name, state.form.save())
 
 
 class RedirectResponse(object):
@@ -32,6 +35,9 @@ class SuccessMessage(object):
         if success_message:
             messages.success(context.request, success_message)
 
+    def get_message(self):
+        raise NotImplementedError()
+
 
 class SimpleSuccessMessage(object):
 
@@ -48,10 +54,16 @@ class SimpleSuccessMessage(object):
 
 class TemplateResponse(object):
 
-    def __init__(self, template):
+    def __init__(self, template, template_context):
         self.template = template
+        self.template_context = template_context
 
     def __call__(self, state, context):
-        return self.template.render_to_response(state, context, {'form': state.form})
+        template_context = {}
+
+        for key, value in self.template_context:
+            template_context[key] = value(state, context)
+
+        return self.template.render_to_response(state, context, template_context)
 
 

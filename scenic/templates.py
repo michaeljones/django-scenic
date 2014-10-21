@@ -3,6 +3,8 @@ from itertools import chain
 
 from django.template.response import TemplateResponse as DjangoTemplateResponse
 
+from .values import StateValue
+
 
 class DictContext(object):
 
@@ -18,6 +20,45 @@ class NullContext(object):
     def __iter__(self):
         # Iterate nothing, maybe just raise StopIteration error?
         return iter([])
+
+
+class StateFormContext(object):
+
+    def __init__(self, name=None):
+        self.name = name
+
+    def __iter__(self):
+
+        context = {}
+        if self.name:
+            context['{name}_form'.format(name=self.name)] = StateValue('form')
+        else:
+            context['form'] = StateValue('form')
+
+        return context.iteritems()
+
+
+class FormValue(object):
+
+    def __init__(self, form_factory):
+        self.form_factory = form_factory
+
+    def __call__(self, state, context):
+        return self.form_factory(state, context)
+
+
+class FormContext(object):
+
+    def __init__(self, forms):
+        self.forms = forms
+
+    def __iter__(self):
+
+        context = {}
+        for name, form_factory in self.forms.iteritems():
+            context['{name}_form'.format(name=name)] = FormValue(form_factory)
+
+        return context.iteritems()
 
 
 class MergeContext(object):
@@ -36,14 +77,18 @@ class Template(object):
         self.render_context = render_context
 
     def render_to_response(self, state, context, render_dict, **response_kwargs):
+
+        template_context = {}
         for key, value in self.render_context:
-            render_dict[key] = value(state, context)
+            template_context[key] = value(state, context)
+
+        template_context.update(render_dict)
 
         response_kwargs.setdefault('content_type', None)
         return DjangoTemplateResponse(
             request=context.request,
             template=[self.path],
-            context=render_dict,
+            context=template_context,
             **response_kwargs
             )
 

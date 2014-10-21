@@ -20,7 +20,22 @@ class InitialKwarg(object):
         self.initial_data = initial_data
 
     def __call__(self, state, context, args, kwargs):
-        kwargs['initial'] = self.initial_data.copy()
+
+        initial = {}
+        for key, value in self.initial_data:
+            initial[key] = value(state, context)
+
+        kwargs['initial'] = initial
+
+
+class AbsoluteUrlArg(object):
+
+    def __init__(self, object):
+        self.object = object
+
+    def __call__(self, state, context, args, kwargs):
+        object = self.object(state, context)
+        args.append(object.get_absolute_url())
 
 
 class PostDataArgs(object):
