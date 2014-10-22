@@ -9,5 +9,3 @@ class UrlFactory(object):
     def __call__(self, pattern, name):
 
         return url(pattern, self.lookup[name], name=name)
-
-

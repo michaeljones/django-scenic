@@ -1,18 +1,25 @@
 
+from conditions import AttrCondition
+
+
 class SingleObject(object):
 
     def __init__(self, name, cache_name, queryset):
-        self.name = name
-        self.cache_name = cache_name
-        self.queryset = queryset
+        # Double underscores to avoid __getattr__ conflicts
+        self.__name = name
+        self.__cache_name = cache_name
+        self.__queryset = queryset
 
     def __call__(self, state, context):
         try:
-            return getattr(state, self.cache_name)
+            return getattr(state, self.__cache_name)
         except AttributeError:
-            value = self.queryset.get(pk=context.kwargs[self.name])
-            setattr(state, self.cache_name, value)
+            value = self.__queryset.get(pk=context.kwargs[self.__name])
+            setattr(state, self.__cache_name, value)
             return value
+
+    def __getattr__(self, name):
+        return AttrCondition(self, name)
 
 
 class ObjectList(object):

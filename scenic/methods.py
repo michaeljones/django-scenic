@@ -7,7 +7,7 @@ class PostFormHandler(object):
         self.invalid_response = invalid_response
 
     def process(self, state, context):
-        state.form = self.form_factory(state, context)
+        state.form = self.form_factory.post(state, context)
         if state.form.is_valid():
             return self.valid_response(state, context)
         else:
@@ -21,7 +21,7 @@ class GetFormHandler(object):
         self.template = template
 
     def process(self, state, context):
-        form = self.form_factory(state, context)
+        form = self.form_factory.get(state, context)
         return self.template.render_to_response(state, context, {'form': form})
 
 
@@ -31,27 +31,36 @@ class FormNotFound(Exception):
     """
 
 
-class PostMultiHandler(object):
+class NamedPostFormHandler(PostFormHandler):
 
-    def __init__(self, form_handlers):
-        self.form_handlers = form_handlers
+    def __init__(self, named_form, valid_response, invalid_response):
+        super(NamedPostFormHandler, self).__init__(
+                named_form.form_factory, valid_response, invalid_response
+                )
+        self.name = named_form.name
+        self.aliases = named_form.aliases
 
-    def _from_form(self, name, state, context):
+
+class PostMultiFormHandler(object):
+
+    def __init__(self, named_handlers):
+        self.named_handlers = named_handlers
+
+    def _from_form(self, name, aliases, state, context):
 
         if name in context.request.POST:
             return True
 
-        names = self.form_handlers[name].get_names()
-        for entry in names:
+        for entry in aliases:
             if entry in context.request.POST:
                 return True
 
         return False
 
     def process(self, state, context):
-        for name in self.form_handlers.iterkeys():
-            if self._from_form(name, state, context):
-                return self.form_handlers[name].process(state, context)
+        for handler in self.named_handlers:
+            if self._from_form(handler.name, handler.aliases, state, context):
+                return handler.process(state, context)
 
         raise FormNotFound('POST: %s' % context.request.POST)
 
@@ -65,14 +74,3 @@ class TemplateHandler(object):
         return self.template.render_to_response(state, context, {})
 
 
-class NamedHandler(object):
-
-    def __init__(self, handler, names):
-        self.handler = handler
-        self.names = names
-
-    def get_names(self):
-        return self.names
-
-    def process(self, state, context):
-        return self.handler.process(state, context)

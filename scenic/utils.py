@@ -12,5 +12,3 @@ def store(name):
                 return value
         return wrap
     return decorator
-
-

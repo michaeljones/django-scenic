@@ -38,3 +38,15 @@ class Or(Condition):
 
     def __call__(self, state, context):
         return self.a(state, context) or self.b(state, context)
+
+
+class AttrCondition(Condition):
+
+    def __init__(self, object, name):
+        self.object = object
+        self.name = name
+
+    def __call__(self, state, context):
+        return getattr(self.object(state, context), self.name)
+
+

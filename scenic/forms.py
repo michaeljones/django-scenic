@@ -5,6 +5,15 @@ class UserArg(object):
         args.append(context.request.user)
 
 
+class ValueArg(object):
+
+    def __init__(self, value):
+        self.value = value
+
+    def __call__(self, state, context, args, kwargs):
+        args.append(self.value(state, context))
+
+
 class InstanceKwarg(object):
 
     def __init__(self, single_object):
@@ -61,13 +70,27 @@ class FormArgsFactory(object):
 
 class FormFactory(object):
 
-    def __init__(self, form_class, form_args_factory):
+    def __init__(self, form_class, form_args):
         self.form_class = form_class
-        self.form_args_factory = form_args_factory
+        self.form_args = form_args
 
-    def __call__(self, state, context):
-        args, kwargs = self.form_args_factory(state, context)
+    def get(self, state, context):
+        args, kwargs = FormArgsFactory(*self.form_args)(state, context)
         form = self.form_class(*args, **kwargs)
         return form
+
+    def post(self, state, context):
+        post_form_args = self.form_args + [PostDataArgs()]
+        args, kwargs = FormArgsFactory(*post_form_args)(state, context)
+        form = self.form_class(*args, **kwargs)
+        return form
+
+
+class NamedForm(object):
+
+    def __init__(self, name, aliases, form_factory):
+        self.name = name
+        self.aliases = aliases
+        self.form_factory = form_factory
 
 

@@ -59,5 +59,3 @@ class View(BaseView):
 
     def post(self, state, context):
         return self.post_handler.process(state, context)
-
-

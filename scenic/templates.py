@@ -44,7 +44,21 @@ class FormValue(object):
         self.form_factory = form_factory
 
     def __call__(self, state, context):
-        return self.form_factory(state, context)
+        return self.form_factory.get(state, context)
+
+
+class NamedFormContext(object):
+
+    def __init__(self, named_forms):
+        self.named_forms = named_forms
+
+    def __iter__(self):
+
+        context = {}
+        for form in self.named_forms:
+            context['{name}_form'.format(name=form.name)] = FormValue(form.form_factory)
+
+        return context.iteritems()
 
 
 class FormContext(object):
@@ -100,5 +114,3 @@ class TemplateFactory(object):
 
     def __call__(self, suffix, render_dict):
         return Template("{base}_{suffix}.html".format(base=self.base, suffix=suffix), render_dict)
-
-
