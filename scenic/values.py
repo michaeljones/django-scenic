@@ -1,4 +1,7 @@
 
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import Http404
+
 from conditions import AttrCondition
 
 
@@ -14,7 +17,10 @@ class SingleObject(object):
         try:
             return getattr(state, self.__cache_name)
         except AttributeError:
-            value = self.__queryset.get(pk=context.kwargs[self.__name])
+            try:
+                value = self.__queryset.get(pk=context.kwargs[self.__name])
+            except ObjectDoesNotExist:
+                raise Http404()
             setattr(state, self.__cache_name, value)
             return value
 
@@ -72,3 +78,10 @@ class LiteralValue(object):
 
     def __call__(self, state, context):
         return self.value
+
+
+class UserValue(object):
+
+    def __call__(self, state, context):
+        return context.request.user
+

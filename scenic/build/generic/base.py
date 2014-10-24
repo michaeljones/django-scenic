@@ -1,7 +1,7 @@
 
-from ..methods import TemplateHandler
-from ..templates import Template
-from ..views import View
+from ...methods import TemplateHandler
+from ...templates import Template
+from ...views import View
 
 
 def template_view(

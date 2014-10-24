@@ -3,15 +3,6 @@ from django.http import HttpResponseRedirect, HttpResponse as DjangoHttpResponse
 from django.contrib import messages
 
 
-class SaveForm(object):
-
-    def __init__(self, name):
-        self.name = name
-
-    def __call__(self, state, context):
-        setattr(state, self.name, state.form.save())
-
-
 class HttpResponse(object):
 
     def __init__(self, status):
@@ -19,6 +10,7 @@ class HttpResponse(object):
 
     def __call__(self, state, context):
         return DjangoHttpResponse(status=self.status)
+
 
 class RedirectResponse(object):
 
@@ -51,19 +43,6 @@ class SuccessMessage(object):
 
     def get_message(self):
         raise NotImplementedError()
-
-
-class SimpleSuccessMessage(object):
-
-    def __init__(self, message, child):
-        self.child = child
-        self.message = message
-
-    def __call__(self, state, context):
-        self.child(state, context)
-
-        message = self.message.format(**state.form.cleaned_data)
-        messages.success(context.request, message)
 
 
 class TemplateResponse(object):
