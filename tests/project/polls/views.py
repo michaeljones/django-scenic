@@ -20,20 +20,29 @@ main_index = create_main_index()
 
 
 def create_index():
-    latest_poll_list = Poll.objects.all().order_by('-pub_date')[:5]
-
+    context = sc.DictContext({
+        'latest_poll_list': sc.LiteralValue(Poll.objects.all().order_by('-pub_date')[:5])
+        })
     return sc.View(
             sc.TemplateHandler(
-                sc.Template('polls/index.html', sc.DictContext({})),
+                sc.Template('polls/index.html', context),
                 )
             )
 
 index = create_index()
 
 
-def detail(request, poll_id):
-    p = get_object_or_404(Poll, pk=poll_id)
-    return render_to_response('polls/detail.html', {'poll': p})
+def create_detail():
+    context = sc.DictContext({
+        'poll': sc.SingleObject('poll_id', 'poll', Poll.objects)
+        })
+    return sc.View(
+            sc.TemplateHandler(
+                sc.Template('polls/detail.html', context),
+                )
+            )
+
+detail = create_detail()
 
 def vote(request, poll_id):
     p = get_object_or_404(Poll, pk=poll_id)
@@ -53,6 +62,16 @@ def vote(request, poll_id):
         # user hits the Back button.
         return HttpResponseRedirect(reverse('polls.views.results', args=(p.id,)))
 
-def results(request, poll_id):
-    p = get_object_or_404(Poll, pk=poll_id)
-    return render_to_response('polls/results.html', {'poll': p})
+
+def create_results():
+    context = sc.DictContext({
+        'poll': sc.SingleObject('poll_id', 'poll', Poll.objects)
+        })
+    return sc.View(
+            sc.TemplateHandler(
+                sc.Template('polls/results.html', context),
+                )
+            )
+
+results = create_results()
+
