@@ -3,12 +3,14 @@ from django.shortcuts import render_to_response, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 
+from scenic.decorators import scenic
 from scenic import all as sc
 
 from .models import Choice, Poll
 
 
-def create_main_index():
+@scenic
+def main_index():
 
     return sc.View(
             sc.TemplateHandler(
@@ -16,10 +18,8 @@ def create_main_index():
                 )
             )
 
-main_index = create_main_index()
-
-
-def create_index():
+@scenic
+def index():
     context = sc.DictContext({
         'latest_poll_list': sc.LiteralValue(Poll.objects.all().order_by('-pub_date')[:5])
         })
@@ -29,10 +29,8 @@ def create_index():
                 )
             )
 
-index = create_index()
-
-
-def create_detail():
+@scenic
+def detail():
     context = sc.DictContext({
         'poll': sc.SingleObject('poll_id', 'poll', Poll.objects)
         })
@@ -42,7 +40,6 @@ def create_detail():
                 )
             )
 
-detail = create_detail()
 
 def vote(request, poll_id):
     p = get_object_or_404(Poll, pk=poll_id)
@@ -63,7 +60,8 @@ def vote(request, poll_id):
         return HttpResponseRedirect(reverse('polls.views.results', args=(p.id,)))
 
 
-def create_results():
+@scenic
+def results():
     context = sc.DictContext({
         'poll': sc.SingleObject('poll_id', 'poll', Poll.objects)
         })
@@ -72,6 +70,4 @@ def create_results():
                 sc.Template('polls/results.html', context),
                 )
             )
-
-results = create_results()
 
