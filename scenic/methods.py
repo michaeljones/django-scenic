@@ -1,10 +1,10 @@
 
-class TemplateHandler(object):
+class GetHandler(object):
 
-    def __init__(self, template):
-        self.template = template
+    def __init__(self, response):
+        self.response = response
 
     def process(self, state, context):
-        return self.template.render_to_response(state, context, {})
+        return self.response(state, context)
 
 
