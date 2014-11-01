@@ -50,24 +50,54 @@ def detail():
             )
 
 
-def vote(request, poll_id):
-    p = get_object_or_404(Poll, pk=poll_id)
-    try:
-        selected_choice = p.choice_set.get(pk=request.POST['choice'])
-    except (KeyError, Choice.DoesNotExist):
-        # Redisplay the poll voting form.
-        return render_to_response('polls/detail.html', {
-            'poll': p,
-            'error_message': "You didn't select a choice.",
-        })
-    else:
-        selected_choice.votes += 1
-        selected_choice.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
-        return HttpResponseRedirect(reverse('polls.views.results', args=(p.id,)))
+class VotePostHandler(object):
 
+    def __init__(self, poll, valid_response, invalid_response):
+        self.poll = poll
+        self.valid_response = valid_response
+        self.invalid_response = invalid_response
+
+    def process(self, state, context):
+
+        poll = self.poll(state, context)
+
+        try:
+            selected_choice = poll.choice_set.get(pk=context.request.POST['choice'])
+        except (KeyError, Choice.DoesNotExist):
+            # Redisplay the poll voting form.
+            return self.invalid_response(state, context)
+        else:
+            selected_choice.votes += 1
+            selected_choice.save()
+            # Always return an HttpResponseRedirect after successfully dealing
+            # with POST data. This prevents data from being posted twice if a
+            # user hits the Back button.
+            return self.valid_response(state, context)
+
+
+@scenic
+def vote():
+
+    poll = sc.SingleObject('poll_id', 'poll', Poll.objects)
+    context = sc.DictContext({
+        'poll': poll,
+        'error_message': sc.LiteralValue("You didn't select a choice.")
+        })
+
+    return sc.View(
+            get=None,
+            post=VotePostHandler(
+                poll,
+                sc.RedirectResponse(
+                    sc.ReverseUrl('polls:results', args=(poll.id,)),
+                    sc.NullAction()
+                    ),
+                sc.TemplateResponse(
+                    sc.Template('polls/detail.html', context),
+                    {}
+                    ),
+                )
+            )
 
 @scenic
 def results():

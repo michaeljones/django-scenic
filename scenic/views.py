@@ -50,9 +50,9 @@ class BaseView(object):
 
 class View(BaseView):
 
-    def __init__(self, get_handler=None, post_handler=None):
-        self.get_handler = get_handler
-        self.post_handler = post_handler
+    def __init__(self, get=None, post=None):
+        self.get_handler = get
+        self.post_handler = post
 
     def get(self, state, context):
         return self.get_handler.process(state, context)

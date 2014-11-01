@@ -1,4 +1,5 @@
 
+from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 
@@ -36,6 +37,22 @@ class AbsoluteUrl(object):
     def __call__(self, state, context):
         object = self.object(state, context)
         return object.get_absolute_url()
+
+
+class ReverseUrl(object):
+
+    def __init__(self, name, args=None, kwargs=None):
+        self.name = name
+        self.args = args or []
+        self.kwargs = kwargs or {}
+
+    def __call__(self, state, context):
+
+        reverse_args = []
+        for entry in self.args:
+            reverse_args.append(entry(state, context))
+
+        return reverse(self.name, args=reverse_args)
 
 
 class StateValue(object):
