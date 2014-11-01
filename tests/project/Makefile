@@ -2,5 +2,5 @@
 run:
 	python manage.py runserver
 
-coverage:
+test:
 	python manage.py test
