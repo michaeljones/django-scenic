@@ -13,8 +13,11 @@ from .models import Choice, Poll
 def main_index():
 
     return sc.View(
-            sc.TemplateHandler(
-                sc.Template('polls/main-index.html', sc.DictContext({})),
+            sc.GetHandler(
+                sc.TemplateResponse(
+                    sc.Template('polls/main-index.html', sc.DictContext({})),
+                    {}
+                    )
                 )
             )
 
@@ -24,8 +27,11 @@ def index():
         'latest_poll_list': sc.LiteralValue(Poll.objects.all().order_by('-pub_date')[:5])
         })
     return sc.View(
-            sc.TemplateHandler(
-                sc.Template('polls/index.html', context),
+            sc.GetHandler(
+                sc.TemplateResponse(
+                    sc.Template('polls/index.html', context),
+                    {}
+                    )
                 )
             )
 
@@ -35,8 +41,11 @@ def detail():
         'poll': sc.SingleObject('poll_id', 'poll', Poll.objects)
         })
     return sc.View(
-            sc.TemplateHandler(
-                sc.Template('polls/detail.html', context),
+            sc.GetHandler(
+                sc.TemplateResponse(
+                    sc.Template('polls/detail.html', context),
+                    {}
+                    )
                 )
             )
 
@@ -66,8 +75,11 @@ def results():
         'poll': sc.SingleObject('poll_id', 'poll', Poll.objects)
         })
     return sc.View(
-            sc.TemplateHandler(
-                sc.Template('polls/results.html', context),
+            sc.GetHandler(
+                sc.TemplateResponse(
+                    sc.Template('polls/results.html', context),
+                    {}
+                    )
                 )
             )
 
