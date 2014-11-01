@@ -6,18 +6,23 @@ from django.utils.timezone import now
 from .models import Poll
 
 
+STATUS_OK = 200
+STATUS_REDIRECT = 302
+
 class MainIndexViewTests(TestCase):
 
     def test_index(self):
 
-        self.client.get(reverse('main:index'))
+        response = self.client.get(reverse('main:index'))
+        self.assertEqual(response.status_code, STATUS_OK)
 
 
 class IndexViewTests(TestCase):
 
     def test_index(self):
 
-        self.client.get(reverse('polls:index'))
+        response = self.client.get(reverse('polls:index'))
+        self.assertEqual(response.status_code, STATUS_OK)
 
 
 class DetailViewTests(TestCase):
@@ -39,5 +44,6 @@ class ResultsViewTests(TestCase):
                 pub_date=now()
                 )
 
-        self.client.get(reverse('polls:results', args=[poll.id]))
+        response = self.client.get(reverse('polls:results', args=[poll.id]))
+        self.assertEqual(response.status_code, STATUS_OK)
 
