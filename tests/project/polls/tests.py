@@ -22,7 +22,7 @@ class IndexViewTests(TestCase):
 
 class DetailViewTests(TestCase):
 
-    def test_index(self):
+    def test_detail(self):
 
         poll = Poll.objects.create(
                 pub_date=now()
@@ -33,7 +33,7 @@ class DetailViewTests(TestCase):
 
 class ResultsViewTests(TestCase):
 
-    def test_index(self):
+    def test_results(self):
 
         poll = Poll.objects.create(
                 pub_date=now()
