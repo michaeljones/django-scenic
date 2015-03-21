@@ -6,5 +6,3 @@ class GetHandler(object):
 
     def process(self, state, context):
         return self.response(state, context)
-
-

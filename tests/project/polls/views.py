@@ -1,8 +1,4 @@
 
-from django.shortcuts import render_to_response, get_object_or_404
-from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
-
 from scenic.decorators import scenic
 from scenic import all as sc
 
@@ -13,41 +9,43 @@ from .models import Choice, Poll
 def main_index():
 
     return sc.View(
-            sc.GetHandler(
-                sc.TemplateResponse(
-                    sc.Template('polls/main-index.html', sc.DictContext({})),
-                    {}
-                    )
-                )
+        sc.GetHandler(
+            sc.TemplateResponse(
+                sc.Template('polls/main-index.html', sc.DictContext({})),
+                {}
             )
+        )
+    )
+
 
 @scenic
 def index():
     context = sc.DictContext({
         'latest_poll_list': sc.LiteralValue(Poll.objects.all().order_by('-pub_date')[:5])
-        })
+    })
     return sc.View(
-            sc.GetHandler(
-                sc.TemplateResponse(
-                    sc.Template('polls/index.html', context),
-                    {}
-                    )
-                )
+        sc.GetHandler(
+            sc.TemplateResponse(
+                sc.Template('polls/index.html', context),
+                {}
             )
+        )
+    )
+
 
 @scenic
 def detail():
     context = sc.DictContext({
         'poll': sc.SingleObject('poll_id', 'poll', Poll.objects)
-        })
+    })
     return sc.View(
-            sc.GetHandler(
-                sc.TemplateResponse(
-                    sc.Template('polls/detail.html', context),
-                    {}
-                    )
-                )
+        sc.GetHandler(
+            sc.TemplateResponse(
+                sc.Template('polls/detail.html', context),
+                {}
             )
+        )
+    )
 
 
 class VotePostHandler(object):
@@ -82,34 +80,34 @@ def vote():
     context = sc.DictContext({
         'poll': poll,
         'error_message': sc.LiteralValue("You didn't select a choice.")
-        })
+    })
 
     return sc.View(
-            get=None,
-            post=VotePostHandler(
-                poll,
-                sc.RedirectResponse(
-                    sc.ReverseUrl('polls:results', args=(poll.id,)),
-                    sc.NullAction()
-                    ),
-                sc.TemplateResponse(
-                    sc.Template('polls/detail.html', context),
-                    {}
-                    ),
-                )
-            )
+        get=None,
+        post=VotePostHandler(
+            poll,
+            sc.RedirectResponse(
+                sc.ReverseUrl('polls:results', args=(poll.id,)),
+                sc.NullAction()
+            ),
+            sc.TemplateResponse(
+                sc.Template('polls/detail.html', context),
+                {}
+            ),
+        )
+    )
+
 
 @scenic
 def results():
     context = sc.DictContext({
         'poll': sc.SingleObject('poll_id', 'poll', Poll.objects)
-        })
+    })
     return sc.View(
-            sc.GetHandler(
-                sc.TemplateResponse(
-                    sc.Template('polls/results.html', context),
-                    {}
-                    )
-                )
+        sc.GetHandler(
+            sc.TemplateResponse(
+                sc.Template('polls/results.html', context),
+                {}
             )
-
+        )
+    )
