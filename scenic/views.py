@@ -1,6 +1,7 @@
 
 from django import http
 
+
 class RequestContext(object):
 
     def __init__(self, request, args, kwargs):

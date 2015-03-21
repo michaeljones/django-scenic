@@ -49,7 +49,7 @@ class Template(object):
             template=[self.path],
             context=template_context,
             **response_kwargs
-            )
+        )
 
 
 class TemplateFactory(object):
@@ -59,4 +59,3 @@ class TemplateFactory(object):
 
     def __call__(self, suffix, render_dict):
         return Template("{base}_{suffix}.html".format(base=self.base, suffix=suffix), render_dict)
-

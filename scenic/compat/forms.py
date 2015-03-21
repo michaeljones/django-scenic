@@ -92,4 +92,3 @@ class NamedForm(object):
         self.name = name
         self.aliases = aliases
         self.form_factory = form_factory
-

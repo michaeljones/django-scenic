@@ -16,7 +16,7 @@ def form_view(
         form,
         form_args,
         action=None
-        ):
+):
 
     if action is None:
         action = SaveForm()
@@ -32,7 +32,7 @@ def form_view(
             RedirectResponse(
                 AbsoluteUrl(StateValue('object')),
                 action
-                ),
+            ),
             TemplateResponse(template, StateFormContext())
-            )
         )
+    )

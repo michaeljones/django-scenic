@@ -88,4 +88,3 @@ class UserValue(object):
 
     def __call__(self, state, context):
         return context.request.user
-

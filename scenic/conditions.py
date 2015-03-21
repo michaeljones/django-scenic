@@ -48,5 +48,3 @@ class AttrCondition(Condition):
 
     def __call__(self, state, context):
         return getattr(self.object(state, context), self.name)
-
-
