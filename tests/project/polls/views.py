@@ -1,4 +1,5 @@
 
+from scenic.build.generic.base import template_view
 from scenic.decorators import scenic
 from scenic import all as sc
 
@@ -7,15 +8,7 @@ from .models import Choice, Poll
 
 @scenic
 def main_index():
-
-    return sc.View(
-        sc.GetHandler(
-            sc.TemplateResponse(
-                sc.Template('polls/main-index.html', sc.DictContext({})),
-                {}
-            )
-        )
-    )
+    return template_view('polls/main-index.html', sc.NullContext())
 
 
 @scenic
