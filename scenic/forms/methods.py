@@ -29,8 +29,8 @@ class NamedPostFormHandler(PostFormHandler):
 
     def __init__(self, named_form, valid_response, invalid_response):
         super(NamedPostFormHandler, self).__init__(
-                named_form.form, valid_response, invalid_response
-                )
+            named_form.form, valid_response, invalid_response
+        )
         self.name = named_form.name
         self.aliases = named_form.aliases
 
@@ -57,5 +57,3 @@ class PostMultiFormHandler(object):
                 return handler.process(state, context)
 
         raise FormNotFound('POST: %s' % context.request.POST)
-
-

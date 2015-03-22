@@ -6,5 +6,3 @@ class NamedForm(object):
         self.aliases = aliases
         self.form = form
         self.helper = helper
-
-

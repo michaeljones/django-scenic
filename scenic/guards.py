@@ -12,8 +12,8 @@ class LoginRequired(BaseView):
     def __call__(self, request, *args, **kwargs):
         if not request.user.is_authenticated():
             return redirect_to_login(
-                    request.get_full_path()
-                    )
+                request.get_full_path()
+            )
 
         return self.child(request, *args, **kwargs)
 
@@ -38,4 +38,3 @@ class Guard(BaseView):
             return self.response(state, context)
 
         return self.view.process(state, context)
-

@@ -1,9 +1,8 @@
 
-from .forms import *
+from .forms import *  # noqa
 
-from .methods import *
+from .methods import *  # noqa
 
-from .responses import *
+from .responses import *  # noqa
 
-from .templates import *
-
+from .templates import *  # noqa

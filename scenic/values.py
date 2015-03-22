@@ -29,6 +29,19 @@ class SingleObject(object):
         return AttrCondition(self, name)
 
 
+class ObjectList(object):
+
+    def __init__(self, queryset):
+        self.queryset = queryset
+
+    def __call__(self, state, context):
+        if hasattr(state, 'object_list'):
+            return state.object_list
+
+        state.object_list = self.queryset.all()
+        return state.object_list
+
+
 class AbsoluteUrl(object):
 
     def __init__(self, object):
@@ -88,4 +101,3 @@ class UserValue(object):
 
     def __call__(self, state, context):
         return context.request.user
-

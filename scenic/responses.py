@@ -58,5 +58,3 @@ class TemplateResponse(object):
             template_context[key] = value(state, context)
 
         return self.template.render_to_response(state, context, template_context)
-
-

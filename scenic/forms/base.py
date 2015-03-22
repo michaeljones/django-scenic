@@ -141,7 +141,6 @@ class BaseForm(object):
         pass
 
 
-
 class Form(six.with_metaclass(DeclarativeFieldsMetaclass, BaseForm)):
     "A collection of Fields, plus their associated data."
     # This is a separate class from BaseForm in order to abstract the way
@@ -216,6 +215,7 @@ class FormDisplay(object):
 @python_2_unicode_compatible
 class BoundField(object):
     "A Field plus data"
+
     def __init__(self, form, form_state, field, name):
         self.form = form
         self.form_state = form_state
@@ -308,9 +308,9 @@ class BoundField(object):
         Returns the data for this BoundField, or None if it wasn't given.
         """
         return self.field.widget.value_from_datadict(
-                self.form_state.data,
-                self.form_state.files,
-                self.html_name)
+            self.form_state.data,
+            self.form_state.files,
+            self.html_name)
 
     def value(self):
         """

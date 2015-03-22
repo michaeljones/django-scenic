@@ -1,6 +1,7 @@
 
 from ..values import StateValue
 
+
 class FormValue(object):
 
     def __init__(self, form_factory):

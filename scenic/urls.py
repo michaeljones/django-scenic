@@ -1,6 +1,7 @@
 
 from django.conf.urls import url
 
+
 class UrlFactory(object):
 
     def __init__(self, lookup):

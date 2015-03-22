@@ -3,6 +3,7 @@ from ..values import LiteralValue, StateValue
 
 from .base import FormDisplay, build_form_state
 
+
 class FormValue(object):
 
     def __init__(self, form):
@@ -27,6 +28,7 @@ class NamedFormContext(object):
 
         return context.iteritems()
 
+
 class FormDisplayValue(object):
 
     def __call__(self, state, context):
@@ -47,4 +49,3 @@ class StateFormContext(object):
             context['form'] = StateValue('form')
 
         return context.iteritems()
-

@@ -1,16 +1,16 @@
-import os
 
 from django.conf.urls import patterns, include, url
-from django.conf import settings
 
 from django.contrib import admin
 admin.autodiscover()
 
-main_patterns = patterns('',
+main_patterns = patterns(
+    '',
     url(r'^$', 'polls.views.main_index', name='index'),
 )
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
 
     url(r'^$', include((main_patterns, "main", "main"))),
 
@@ -18,4 +18,3 @@ urlpatterns = patterns('',
 
     (r'^polls/', include('polls.urls', namespace='polls')),
 )
-

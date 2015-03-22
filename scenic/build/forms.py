@@ -16,7 +16,6 @@ def named_form_handler(named_form, template, action=None):
         RedirectResponse(
             AbsoluteUrl(StateValue('object')),
             action,
-            ),
+        ),
         TemplateResponse(template, StateFormContext(named_form.name))
-        )
-
+    )
