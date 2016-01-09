@@ -3,7 +3,7 @@ import copy
 
 from django.core.exceptions import ValidationError
 from django.forms.fields import FileField
-from django.forms.util import flatatt, ErrorDict, ErrorList
+from django.forms.utils import flatatt, ErrorDict, ErrorList
 from django.forms.forms import DeclarativeFieldsMetaclass, pretty_name
 from django.forms.widgets import TextInput, Textarea
 from django.utils.encoding import smart_text, python_2_unicode_compatible
