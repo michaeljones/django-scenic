@@ -1,4 +1,6 @@
 
+from json import JSONEncoder
+
 from django.http import HttpResponseRedirect, HttpResponse as DjangoHttpResponse
 from django.contrib import messages
 
@@ -58,3 +60,16 @@ class TemplateResponse(object):
             template_context[key] = value(state, context)
 
         return self.template.render_to_response(state, context, template_context)
+
+
+class JsonResponse(object):
+
+    def __init__(self, json_generator):
+        self.json_generator = json_generator
+
+    def __call__(self, state, context):
+        data = self.json_generator(state, context)
+        return DjangoHttpResponse(
+            JSONEncoder().encode(data),
+            content_type='application/json',
+            )
