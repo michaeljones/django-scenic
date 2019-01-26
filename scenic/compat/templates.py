@@ -22,7 +22,7 @@ class NamedFormContext(object):
         for form in self.named_forms:
             context['{name}_form'.format(name=form.name)] = FormValue(form.form_factory)
 
-        return context.iteritems()
+        return iter(context.items())
 
 
 class StateFormContext(object):
@@ -38,4 +38,4 @@ class StateFormContext(object):
         else:
             context['form'] = StateValue('form')
 
-        return context.iteritems()
+        return iter(context.items())

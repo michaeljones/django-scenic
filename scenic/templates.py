@@ -10,7 +10,7 @@ class DictContext(object):
         self.data = data
 
     def __iter__(self):
-        return self.data.iteritems()
+        return iter(self.data.items())
 
 
 class NullContext(object):
