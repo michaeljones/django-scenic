@@ -3,7 +3,7 @@ from django.core.urlresolvers import reverse
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import Http404
 
-from conditions import AttrCondition
+from .conditions import AttrCondition
 
 
 class SingleObject(object):
