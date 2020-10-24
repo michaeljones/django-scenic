@@ -10,7 +10,7 @@ class LoginRequired(BaseView):
         self.child = child
 
     def __call__(self, request, *args, **kwargs):
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return redirect_to_login(
                 request.get_full_path()
             )
