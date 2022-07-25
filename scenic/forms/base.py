@@ -10,7 +10,6 @@ from django.utils.encoding import smart_text
 from django.utils.html import conditional_escape, format_html
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
-from django.utils import six
 
 
 NON_FIELD_ERRORS = '__all__'
@@ -141,7 +140,7 @@ class BaseForm(object):
         pass
 
 
-class Form(six.with_metaclass(DeclarativeFieldsMetaclass, BaseForm)):
+class Form(BaseForm, metaclass=DeclarativeFieldsMetaclass):
     "A collection of Fields, plus their associated data."
     # This is a separate class from BaseForm in order to abstract the way
     # self.fields is specified. This class (Form) is the one that does the
