@@ -31,15 +31,17 @@ class SingleObject(object):
 
 class ObjectList(object):
 
-    def __init__(self, queryset):
+    def __init__(self, attr_name, queryset):
         self.queryset = queryset
+        self.attr_name = attr_name
 
     def __call__(self, state, context):
-        if hasattr(state, 'object_list'):
-            return state.object_list
+        if hasattr(state, self.attr_name):
+            return getattr(state, self.attr_name)
 
-        state.object_list = self.queryset.all()
-        return state.object_list
+        value = self.queryset.all()
+        setattr(state, self.attr_name, value)
+        return value
 
 
 class AbsoluteUrl(object):
