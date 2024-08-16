@@ -6,7 +6,7 @@ from django.forms.fields import FileField
 from django.forms.utils import flatatt, ErrorDict, ErrorList, pretty_name
 from django.forms.forms import DeclarativeFieldsMetaclass
 from django.forms.widgets import TextInput, Textarea
-from django.utils.encoding import smart_text
+from django.utils.encoding import smart_str
 from django.utils.html import conditional_escape, format_html
 from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
@@ -379,8 +379,8 @@ class BoundField(object):
         associated Form has specified auto_id. Returns an empty string otherwise.
         """
         auto_id = self.form.auto_id
-        if auto_id and '%s' in smart_text(auto_id):
-            return smart_text(auto_id) % self.html_name
+        if auto_id and '%s' in smart_str(auto_id):
+            return smart_str(auto_id) % self.html_name
         elif auto_id:
             return self.html_name
         return ''
