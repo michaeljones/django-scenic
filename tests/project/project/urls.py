@@ -1,18 +1,18 @@
 
-from django.conf.urls import patterns, include, url
+from django.urls import patterns, include, re_path
 
 from django.contrib import admin
 admin.autodiscover()
 
 main_patterns = patterns(
     '',
-    url(r'^$', 'polls.views.main_index', name='index'),
+    re_path(r'^$', 'polls.views.main_index', name='index'),
 )
 
 urlpatterns = patterns(
     '',
 
-    url(r'^$', include((main_patterns, "main", "main"))),
+    re_path(r'^$', include((main_patterns, "main", "main"))),
 
     (r'^admin/', include(admin.site.urls)),
 
